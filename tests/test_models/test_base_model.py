@@ -17,6 +17,13 @@ class test_basemodel(unittest.TestCase):
         self.name = 'BaseModel'
         self.value = BaseModel
 
+    def test_pycodestyle(self):
+        """Test pep8 format"""
+        pycodestyle = pycodestyle.StyleGuide(quiet=True)
+        result = pycodestyle.check_files(['models/base_model.py'])
+        self.assertEqual(result.total_errors, 0,
+                "Found code style errors (and warning).")
+
     def setUp(self):
         """ """
         pass
@@ -97,3 +104,27 @@ class test_basemodel(unittest.TestCase):
         n = new.to_dict()
         new = BaseModel(**n)
         self.assertFalse(new.created_at == new.updated_at)
+
+    def test_uuid(self):
+        """Test UUID"""
+        inst1 = BaseModel()
+        inst2 = BaseModel()
+        inst3 = BaseModel()
+        list_insts = [inst1, inst2, inst3]
+        for inst in list_insts:
+            inst_uuid = inst.id
+            with self.subTest(uuid=inst_uuid):
+                self.assertIs(type(inst_uuid), str)
+            self.assertNotEqual(inst1.id, inst2.id)
+            self.assertNotEqual(inst1.id, inst3.id)
+            self.assertNotEqual(inst2.id, inst3.id)
+
+    def test_str_mtd(self):
+        """Test the return method of STR"""
+        inst6 = BaseModel()
+        str_output = f"[BaseModel] ({inst6.id}) {inst6.__dict__})"
+        self.assertEqual(str_output, str(inst6))
+
+
+if __name__ == "__main__":
+    unittest.main()
