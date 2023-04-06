@@ -1,35 +1,30 @@
 #!/usr/bin/env bash
 # Sets up a web server for deployment of web_static.
+FAKE_HTML="<html>\n  <head>\n  </head>\n  <body>\n\tHolberton School\n  </body>\n</html>"
+SERVER_BLOCK_PATH="/etc/nginx/sites-available/default"
+ROOT_DIR="/data"
+RELEASE="$ROOT_DIR/web_static/releases/test"
+SHARE="$ROOT_DIR/web_static/shared"
+LINK="$ROOT_DIR/web_static/current"
+STATIC="\n\tlocation /hbnb_static/ {\n\t\talias $LINK/;\n\t}\n"
 
-apt-get update
-apt-get install -y nginx
+# update and install NGINX if not available
+sudo apt-get update && sudo apt-get -y install nginx
 
-mkdir -p /data/web_static/releases/test/
-mkdir -p /data/web_static/shared/
-echo "Holberton School" > /data/web_static/releases/test/index.html
-ln -sf /data/web_static/releases/test/ /data/web_static/current
+# create the directory to hold the web page
+sudo mkdir -p "$RELEASE" "$SHARE"
 
-chown -R ubuntu /data/
-chgrp -R ubuntu /data/
+# add the HTML in the required file
+echo -e "$FAKE_HTML" | sudo tee "$RELEASE/index.html"
 
-printf %s "server {
-    listen 80 default_server;
-    listen [::]:80 default_server;
-    add_header X-Served-By $HOSTNAME;
-    root   /var/www/html;
-    index  index.html index.htm;
-    location /hbnb_static {
-        alias /data/web_static/current;
-        index index.html index.htm;
-    }
-    location /redirect_me {
-        return 301 http://cuberule.com/;
-    }
-    error_page 404 /404.html;
-    location /404 {
-      root /var/www/html;
-      internal;
-    }
-}" > /etc/nginx/sites-available/default
+# create a symbolic link between two file system paths
+sudo ln -sf "$RELEASE" "$LINK"
 
-service nginx restart
+# change ownership to ubuntu
+sudo chown -hR ubuntu:ubuntu "$ROOT_DIR"
+
+# modify the code at a specific line number using an alias
+sudo sed -i "46 a\ $STATIC" "$SERVER_BLOCK_PATH"
+
+# restart nginx server
+sudo service nginx restart
