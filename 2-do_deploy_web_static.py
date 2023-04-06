@@ -15,16 +15,17 @@ def do_pack():
     """
         return the archive path if archive has generated correctly.
     """
+    if not os.path.exists('versions'):
+        os.makedirs('versions')
+    stamp = datetime.now().isoformat().split('.')[0]\
+        .replace('-', '').replace('T', '').replace(':', '')
+    status = local('tar -czvf versions/web_static_{}.tgz web_static'
+                   .format(stamp))
 
-    local("mkdir -p versions")
-    date = datetime.now().strftime("%Y%m%d%H%M%S")
-    archived_f_path = "versions/web_static_{}.tgz".format(date)
-    t_gzip_archive = local("tar -cvzf {} web_static".format(archived_f_path))
-
-    if t_gzip_archive.succeeded:
-        return archived_f_path
+    if status.succeeded:
+        return os.path.normalpath(f'versions/web_static_{stamp}')
     else:
-        return None
+        return
 
 
 def do_deploy(archive_path):
