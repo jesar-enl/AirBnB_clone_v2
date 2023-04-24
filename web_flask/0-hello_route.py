@@ -1,5 +1,8 @@
 #!/usr/bin/python3
-# A script to create a route to the home displaying `Hello HBNB`
+"""
+A script to create a route to the home displaying `Hello HBNB`
+"""
+
 
 from flask import Flask
 
