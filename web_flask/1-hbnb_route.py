@@ -1,5 +1,8 @@
 #!/usr/bin/python3
-# A script to display the HBNB route
+"""
+A script to display the HBNB route
+"""
+
 
 from flask import Flask
 
