@@ -11,6 +11,8 @@ import os
 
 
 store = os.getenv('HBNB_TYPE_STORAGE')
+
+
 class State(BaseModel, Base):
     """This is the class for State
     Attributes:
@@ -20,7 +22,7 @@ class State(BaseModel, Base):
     name = Column(String(128), nullable=False)
     if store == 'db':
         cities = relationship("City", cascade='all, delete, delete-orphan',
-                          backref="state")
+                              backref="state")
 
     @property
     def cities(self):
