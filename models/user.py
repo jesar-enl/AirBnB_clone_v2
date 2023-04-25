@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-<<<<<<< HEAD
 """This is the user class"""
 from sqlalchemy.ext.declarative import declarative_base
 from models.base_model import BaseModel, Base
@@ -26,7 +25,7 @@ class User(BaseModel, Base):
                           backref="user")
     reviews = relationship("Review", cascade='all, delete, delete-orphan',
                            backref="user")
-=======
+
 """
     module containing user class
     module containing user class
@@ -57,4 +56,3 @@ class User(BaseModel, Base):
         password = ""
         first_name = ""
         last_name = ""
->>>>>>> 1c319d1a1f71365f47e891208cdbf1201a869328
